@@ -36,6 +36,7 @@ type CovReport struct {
 	Filename  string
 	StartLine int
 	Raw       []byte
+	CovFile   string
 }
 
 func main() {
@@ -77,6 +78,7 @@ func start() error {
 				Filename:  string(filename),
 				StartLine: startLine,
 				Raw:       line,
+				CovFile:   covfile,
 			})
 		}
 	}
@@ -94,16 +96,21 @@ func start() error {
 		return fmt.Errorf("error writing starting line to file: %w", err)
 	}
 
-	numLinesIgnored := 0
-	lastReport := CovReport{}
+	numLinesMerged := 0
+	lastReport := r[0]
 	for _, report := range r {
 		if report.Filename == lastReport.Filename &&
 			report.StartLine == lastReport.StartLine {
-			numLinesIgnored++
+
+			// When finding duplicates keep the ones that say it was tested:
+			if report.Raw[len(report.Raw)-1] == '1' {
+				lastReport = report
+			}
+			numLinesMerged++
 			continue
 		}
 
-		_, err := out.Write(append(report.Raw, '\n'))
+		_, err := out.Write(append(lastReport.Raw, '\n'))
 		if err != nil {
 			return fmt.Errorf("error writing line to file: %w", err)
 		}
@@ -111,7 +118,12 @@ func start() error {
 		lastReport = report
 	}
 
-	fmt.Println("number of duplicated lines ignored:", numLinesIgnored)
+	_, err = out.Write(append(lastReport.Raw, '\n'))
+	if err != nil {
+		return fmt.Errorf("error writing line to file: %w", err)
+	}
+
+	fmt.Println("number of duplicated lines merged:", numLinesMerged)
 
 	return nil
 }
