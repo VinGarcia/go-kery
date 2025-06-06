@@ -28,7 +28,9 @@ jobs:
       - name: Run Tests
         run: ./scripts/run-all-tests.sh
       - name: Merge Test Coverage Files
-        run: go run ./scripts/mergecov coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
+        run: |
+          go run ./scripts/mergecov coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
+          rm -f coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
         with:
