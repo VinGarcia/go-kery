@@ -27,10 +27,12 @@ jobs:
         run: go vet ./... && go install honnef.co/go/tools/cmd/staticcheck@latest && bash -c "$(go env GOPATH)/bin/staticcheck ./..."
       - name: Run Tests
         run: ./scripts/run-all-tests.sh
+      - name: Merge Test Coverage Files
+        run: go run ./scripts/mergecov coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
         with:
-          files: coverage.txt,benchmarks/coverage.txt,examples/coverage.txt,adapters/kpgx/coverage.txt,adapters/kpgx5/coverage.txt,adapters/ksqlite3/coverage.txt,adapters/modernc-ksqlite/coverage.txt,adapters/kpostgres/coverage.txt,adapters/kmysql/coverage.txt
+          files: merged.coverage.txt
           token: ${{ secrets.CODECOV_TOKEN }}
 
 
