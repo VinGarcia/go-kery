@@ -237,6 +237,7 @@ func fillGapsInCoverage(ss []*CovSection) (numGapsCovered int, out []*CovSection
 		}
 
 		out = append(out, s)
+		prevSec = s
 	}
 
 	return numGapsCovered, out
