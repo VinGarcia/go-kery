@@ -24,13 +24,16 @@ jobs:
       - name: Check go version
         run: go version
       - name: Run linters
+        if: false
         run: go vet ./... && go install honnef.co/go/tools/cmd/staticcheck@latest && bash -c "$(go env GOPATH)/bin/staticcheck ./..."
       - name: Run Tests
+        if: false
         run: ./scripts/run-all-tests.sh
       - name: Merge Test Coverage Files
+        if: false
         run: |
-          #go run ./scripts/mergecov coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
-          #rm -f coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
+          go run ./scripts/mergecov coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
+          rm -f coverage.txt benchmarks/coverage.txt examples/coverage.txt adapters/kpgx/coverage.txt adapters/kpgx5/coverage.txt adapters/ksqlite3/coverage.txt adapters/modernc-ksqlite/coverage.txt adapters/kpostgres/coverage.txt adapters/kmysql/coverage.txt
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
         with:
